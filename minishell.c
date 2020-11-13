@@ -248,11 +248,16 @@ void run(int i, int t_opt, char **argv){
     pid = fork(); 
     if (pid ==0){  //child 
         //-1 = &, 1 = pipe, 2 = <, 3 = > 
-        if(t_opt ==0){ 
+        if(t_opt == -1){
+		printf("%s가 백그라운드로 실행...\n",argv[i]);
+		selectCmd(i,argv);
+		exit(0);
+	}   
+	else if(t_opt == 0){ 
             selectCmd(i, argv); 
             exit(0); 
         } 
-        else if(t_opt ==2){ 
+        else if(t_opt == 2){ 
             if ((fd = open(argv[i +2], flags, mode)) ==-1) { 
                 perror("open"); /* errno에 대응하는 메시지 출력됨*/ 
                 exit(1); 
@@ -261,7 +266,7 @@ void run(int i, int t_opt, char **argv){
                 perror("dup2"); /* errno에 대응하는 메시지 출력됨 */ 
                 exit(1); 
             } 
-            if (close(fd) ==-1) { 
+            if (close(fd) == -1) { 
                 perror("close"); /* errno에 대응하는 메시지 출력됨*/ 
                 exit(1); 
             } 
@@ -365,7 +370,7 @@ void main() {
             } 
             if(t_opt >1){  //it's optional arg 
                 i +=2; 
-            } 
+            }
         }   //end for loop 
     }   //end while loop 
 }
